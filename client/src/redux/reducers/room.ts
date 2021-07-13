@@ -1,0 +1,52 @@
+import {
+  FINISH_LOADING,
+  GET_ALL_ROOMS,
+  START_LOADING
+} from '../actions/constant';
+import { RoomActionType } from '../types/actionType';
+import { RoomType } from '../types/roomType';
+
+type InitialState = {
+  loading: boolean;
+  error: string;
+  rooms: RoomType[];
+  roomsCount?: number;
+  itemsPerPage?: number;
+  filteredRoomCount?: number;
+};
+const initialState: InitialState = {
+  loading: false,
+  error: '',
+  rooms: []
+};
+
+const roomReducer = (
+  state = initialState,
+  action: RoomActionType
+): InitialState => {
+  switch (action.type) {
+    case START_LOADING:
+      return {
+        loading: true,
+        error: '',
+        rooms: [],
+        roomsCount: undefined,
+        itemsPerPage: undefined,
+        filteredRoomCount: undefined
+      };
+    case FINISH_LOADING:
+      return { ...state, loading: false };
+    case GET_ALL_ROOMS:
+      return {
+        ...state,
+        rooms: action.payload.rooms,
+        roomsCount: action.payload.roomCount,
+        itemsPerPage: action.payload.itemsPerPage,
+        filteredRoomCount: action.payload.filteredRoomCount
+      };
+    default:
+      return state;
+  }
+};
+
+export default roomReducer;
