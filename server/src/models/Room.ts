@@ -10,7 +10,7 @@ export type RoomDocument = Document & {
   WiFi?: boolean;
   breakfast?: boolean;
   numberOfBeds?: number;
-  images?: string;
+  images: string[];
   guestCapacity?: number;
   user?: string;
 };
