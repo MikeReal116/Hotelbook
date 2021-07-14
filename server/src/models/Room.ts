@@ -64,9 +64,17 @@ const roomSchema = new mongoose.Schema(
     }
   },
   {
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
     timestamps: true
   }
 );
+
+roomSchema.virtual('review', {
+  ref: 'Review',
+  localField: '_id',
+  foreignField: 'room'
+});
 
 const Room = mongoose.model('Room', roomSchema);
 export default Room;
