@@ -9,7 +9,12 @@ const createRoom = async (room: RoomDocument) => {
 const getRoom = async (id: string) => {
   const room = await Room.findById(id);
   if (!room) throw new NotFoundError('No Room Found');
-  return room;
+  return await room
+    .populate({
+      path: 'review',
+      select: '-__v -updatedAt -reviewer'
+    })
+    .execPopulate();
 };
 
 const updateRoom = async (id: string, data: RoomDocument) => {

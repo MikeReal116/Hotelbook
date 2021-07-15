@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 
 import roomRouter from './routers/room';
+import reviewRouter from './routers/review';
 import errorHanldler from './middlewares/error';
 
 dotenv.config({ path: '.env' });
@@ -12,6 +13,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use('/api/v1/rooms', roomRouter);
+app.use('/api/v1/reviews', reviewRouter);
 
 app.use(errorHanldler);
 

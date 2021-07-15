@@ -2,6 +2,7 @@ import { Dispatch } from 'redux';
 
 import {
   GET_ALL_ROOMS,
+  GET_ROOM,
   FETCH_ERROR,
   START_LOADING,
   FINISH_LOADING
@@ -32,3 +33,16 @@ export const getAllRooms = () => async (dispatch: Dispatch<RoomActionType>) => {
     dispatch(finishLoading());
   }
 };
+
+export const getRoom =
+  (id: string) => async (dispatch: Dispatch<RoomActionType>) => {
+    try {
+      dispatch(startLoading());
+      const { data } = await axios.get(`/api/v1/rooms/${id}`);
+      dispatch({ type: GET_ROOM, payload: data });
+      dispatch(finishLoading());
+    } catch (error) {
+      dispatch(fetchError(error.response.data.message));
+      dispatch(finishLoading());
+    }
+  };

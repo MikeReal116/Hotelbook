@@ -1,7 +1,11 @@
 import { Request, Response, NextFunction } from 'express';
 
 import RoomServices from '../services/room';
-import { InternalServerError, BadRequestError } from '../utils/appError';
+import {
+  InternalServerError,
+  BadRequestError,
+  NotFoundError
+} from '../utils/appError';
 
 export const createRoom = async (
   req: Request,
@@ -40,9 +44,10 @@ export const getRoom = async (
   const { id } = req.params;
   try {
     const room = await RoomServices.getRoom(id);
+
     res.json(room);
   } catch (error) {
-    next(new InternalServerError('Internal Server Error'));
+    next(new NotFoundError('Internal Server Error'));
   }
 };
 
@@ -59,7 +64,7 @@ export const updateRoom = async (
   } catch (error) {
     if (error.name === 'ValidationError')
       return next(new BadRequestError('Bad Request'));
-    next(new InternalServerError('Internal Server Error'));
+    next(new NotFoundError('Room not found'));
   }
 };
 
@@ -73,6 +78,6 @@ export const deleteRoom = async (
     const room = await RoomServices.deleteRoom(id);
     res.json(room);
   } catch (error) {
-    next(new InternalServerError('Internal Server Error'));
+    next(new NotFoundError('Room not found'));
   }
 };

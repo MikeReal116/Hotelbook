@@ -1,10 +1,11 @@
 import {
   GET_ALL_ROOMS,
+  GET_ROOM,
   FETCH_ERROR,
   START_LOADING,
   FINISH_LOADING
 } from '../actions/constant';
-import { AllRoomType } from './roomType';
+import { AllRoomType, RoomType } from './roomType';
 
 type GetAllRooms = {
   type: typeof GET_ALL_ROOMS;
@@ -24,8 +25,14 @@ type FinishLoading = {
   type: typeof FINISH_LOADING;
 };
 
+type getRoom = {
+  type: typeof GET_ROOM;
+  payload: RoomType;
+};
+
 export type RoomActionType =
   | GetAllRooms
   | FetchError
   | StartLoading
-  | FinishLoading;
+  | FinishLoading
+  | getRoom;

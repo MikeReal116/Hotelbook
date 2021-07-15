@@ -6,6 +6,7 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
+import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles((theme: Theme) => ({
   card: {
@@ -28,32 +29,37 @@ type CardProps = {
   image: string;
   name: string;
   price: number;
-  rating: number;
-  numberOfRating: number;
+  description: string;
+  id: string;
 };
 
-const CardComponent = ({
-  image,
-  name,
-  price,
-  rating,
-  numberOfRating
-}: CardProps) => {
+const formatText = (text: string) => {
+  const newText = text.slice(0, 80);
+  return newText.padEnd(85, '.');
+};
+
+const CardComponent = ({ image, name, price, description, id }: CardProps) => {
+  const history = useHistory();
   const classes = useStyles();
+
+  const handleClick = (id: string) => {
+    history.push(`/rooms/${id}`);
+  };
+
   return (
     <Grid item xs={12} sm={6} md={3}>
       <Card className={classes.card}>
         <CardMedia className={classes.cardMedia} image={image} title={name} />
         <CardContent className={classes.cardContent}>
-          <Typography gutterBottom variant='h6' component='h2' paragraph>
+          <Typography gutterBottom variant='subtitle2' paragraph>
             {name}
           </Typography>
           <Typography
             variant='subtitle2'
             paragraph
-          >{`${price}$ / night`}</Typography>
-          <Typography variant='body2' paragraph>
-            {rating} {numberOfRating}
+          >{`${price}€ / night`}</Typography>
+          <Typography paragraph variant='body2'>
+            {formatText(description)}
           </Typography>
         </CardContent>
         <CardActions>
@@ -62,6 +68,7 @@ const CardComponent = ({
             color='primary'
             className={classes.button}
             fullWidth
+            onClick={() => handleClick(id)}
           >
             View Detail
           </Button>

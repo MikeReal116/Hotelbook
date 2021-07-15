@@ -7,8 +7,11 @@ import {
   updateRoom,
   deleteRoom
 } from '../controllers/room';
+import reviewRoute from './review';
 
 const router = express.Router();
+
+router.use('/:roomId/review', reviewRoute);
 
 router.post('/', createRoom);
 router.get('/', getAllRooms);
