@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import AppBar from '@material-ui/core/AppBar';
 import Button from '@material-ui/core/Button';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -18,7 +19,9 @@ const useStyles = makeStyles((theme) => ({
     textTransform: 'none'
   },
   title: {
-    marginLeft: theme.spacing(2)
+    marginLeft: theme.spacing(2),
+    color: '#fff',
+    textDecoration: 'none'
   }
 }));
 
@@ -34,6 +37,8 @@ const Header = () => {
             color='inherit'
             noWrap
             className={classes.title}
+            component={Link}
+            to={'/'}
           >
             Booking
           </Typography>

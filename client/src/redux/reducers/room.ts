@@ -1,6 +1,7 @@
 import {
   FINISH_LOADING,
   GET_ALL_ROOMS,
+  GET_ROOM,
   START_LOADING
 } from '../actions/constant';
 import { RoomActionType } from '../types/actionType';
@@ -10,6 +11,7 @@ type InitialState = {
   loading: boolean;
   error: string;
   rooms: RoomType[];
+  room?: RoomType;
   roomsCount?: number;
   itemsPerPage?: number;
   filteredRoomCount?: number;
@@ -44,6 +46,8 @@ const roomReducer = (
         itemsPerPage: action.payload.itemsPerPage,
         filteredRoomCount: action.payload.filteredRoomCount
       };
+    case GET_ROOM:
+      return { ...state, room: action.payload };
     default:
       return state;
   }

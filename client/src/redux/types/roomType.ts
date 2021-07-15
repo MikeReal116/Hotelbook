@@ -1,3 +1,9 @@
+type ReviewType = {
+  reviewerName: string;
+  rating: number;
+  review: string;
+  createdAt: Date;
+};
 export type RoomType = {
   _id: string;
   name: string;
@@ -12,6 +18,7 @@ export type RoomType = {
   images: string[];
   guestCapacity?: number;
   user?: string;
+  review?: ReviewType[];
 };
 
 export type AllRoomType = {

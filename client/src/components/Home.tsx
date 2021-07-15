@@ -39,8 +39,8 @@ const Home = () => {
               image={room.images[0]}
               name={room.name}
               price={room.price}
-              rating={room.rating as number}
-              numberOfRating={room.numberOfRating as number}
+              description={room.description}
+              id={room._id}
             />
           ))}
         </Grid>
