@@ -22,17 +22,22 @@ export const fetchError = (error: string): RoomActionType => {
   return { type: FETCH_ERROR, payload: error };
 };
 
-export const getAllRooms = () => async (dispatch: Dispatch<RoomActionType>) => {
-  try {
-    dispatch(startLoading());
-    const { data } = await axios.get('/api/v1/rooms');
-    dispatch({ type: GET_ALL_ROOMS, payload: data });
-    dispatch(finishLoading());
-  } catch (error) {
-    dispatch(fetchError(error.response.data.message));
-    dispatch(finishLoading());
-  }
-};
+export const getAllRooms =
+  (page = 1, search?: string) =>
+  async (dispatch: Dispatch<RoomActionType>) => {
+    try {
+      dispatch(startLoading());
+      const url = search
+        ? `/api/v1/rooms?page=${page}&location=${search}`
+        : `/api/v1/rooms?page=${page}`;
+      const { data } = await axios.get(url);
+      dispatch({ type: GET_ALL_ROOMS, payload: data });
+      dispatch(finishLoading());
+    } catch (error) {
+      dispatch(fetchError(error.response.data.message));
+      dispatch(finishLoading());
+    }
+  };
 
 export const getRoom =
   (id: string) => async (dispatch: Dispatch<RoomActionType>) => {

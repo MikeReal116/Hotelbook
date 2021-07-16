@@ -1,4 +1,5 @@
 type ReviewType = {
+  _id: string;
   reviewerName: string;
   rating: number;
   review: string;

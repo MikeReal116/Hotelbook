@@ -98,7 +98,7 @@ const Detail = () => {
             <Grid container spacing={4}>
               {room.review?.length
                 ? room.review.map((review) => (
-                    <Grid item xs={12} sm={6} md={4}>
+                    <Grid item xs={12} sm={6} md={4} key={review._id}>
                       <Card className={classes.card}>
                         <Typography variant='body1' paragraph>
                           {review.reviewerName}
