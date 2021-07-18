@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 
-import { BadRequestError } from 'utils/appError';
+import { BadRequestError } from '../utils/appError';
 import UserServices from '../services/user';
 
 export const signup = async (
@@ -13,7 +13,7 @@ export const signup = async (
     const newUser = await UserServices.signup(user);
     const token = newUser.getToken();
 
-    res.json(201).json({
+    res.status(201).json({
       user: {
         firstName: newUser.firstName,
         lastName: newUser.lastName,
@@ -27,13 +27,17 @@ export const signup = async (
   }
 };
 
-const login = async (req: Request, res: Response, next: NextFunction) => {
+export const login = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   const { email, password } = req.body;
   try {
     const user = await UserServices.login(email, password);
     const token = user.getToken();
 
-    res.json(201).json({
+    res.status(201).json({
       user: {
         firstName: user.firstName,
         lastName: user.lastName,

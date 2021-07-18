@@ -67,6 +67,13 @@ const Home = () => {
           <Grid item xs={12}>
             <Search />
           </Grid>
+          {hotelLocation && !rooms.length && (
+            <Typography
+              align='center'
+              color='secondary'
+              variant='body1'
+            >{`No rooms available for ${hotelLocation}`}</Typography>
+          )}
           {rooms.map((room) => (
             <Card
               key={room._id}
