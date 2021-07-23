@@ -11,7 +11,9 @@ import {
   SIGN_UP,
   START_LOGIN,
   FINISH_LOGIN,
-  LOGOUT
+  LOGOUT,
+  FORGOT_PASSWORD,
+  RESET_PASSWORD
 } from './constant';
 import { RoomActionType, UserActionType } from '../types/actionType';
 import axios from '../../axios/axios';
@@ -89,6 +91,32 @@ export const login =
     } catch (error) {
       dispatch(fetchError(error.response.data.message) as UserActionType);
       dispatch({ type: FINISH_LOGIN });
+    }
+  };
+
+export const forgotPassword =
+  (email: string) => async (dispatch: Dispatch<UserActionType>) => {
+    try {
+      const { data } = await axios.post('/api/v1/users/forgotpassword', {
+        email
+      });
+      dispatch({ type: FORGOT_PASSWORD, payload: data.message });
+    } catch (error) {
+      dispatch(fetchError(error.response.data.message) as UserActionType);
+    }
+  };
+
+export const resetPassword =
+  (id: string, token: string, password: string, resetPassword: string) =>
+  async (dispatch: Dispatch<UserActionType>) => {
+    try {
+      const { data } = await axios.patch(
+        `/api/v1/users/resetpassword/${id}/${token}`,
+        { password, resetPassword }
+      );
+      dispatch({ type: RESET_PASSWORD, payload: data.message });
+    } catch (error) {
+      dispatch(fetchError(error.response.data.message) as UserActionType);
     }
   };
 

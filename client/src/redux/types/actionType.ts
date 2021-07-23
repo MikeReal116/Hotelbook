@@ -8,7 +8,9 @@ import {
   LOGIN,
   START_LOGIN,
   FINISH_LOGIN,
-  LOGOUT
+  LOGOUT,
+  FORGOT_PASSWORD,
+  RESET_PASSWORD
 } from '../actions/constant';
 import { AllRoomType, RoomType } from './roomType';
 
@@ -65,6 +67,16 @@ type FinishLogin = {
   type: typeof FINISH_LOGIN;
 };
 
+type ForgotPassword = {
+  type: typeof FORGOT_PASSWORD;
+  payload: string;
+};
+
+type ResetPassword = {
+  type: typeof RESET_PASSWORD;
+  payload: string;
+};
+
 type Logout = {
   type: typeof LOGOUT;
 };
@@ -81,4 +93,6 @@ export type UserActionType =
   | Logout
   | FetchError
   | StartLogin
-  | FinishLogin;
+  | FinishLogin
+  | ForgotPassword
+  | ResetPassword;

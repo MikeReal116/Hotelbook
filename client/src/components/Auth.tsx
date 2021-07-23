@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useHistory } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import Avatar from '@material-ui/core/Avatar';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -153,7 +153,19 @@ const Auth = () => {
           >
             {loading ? <CircularProgress /> : isLogin ? 'Log In' : 'Sign Up'}
           </Button>
-          <Grid container justifyContent='flex-end'>
+          <Grid container justifyContent='space-between'>
+            {isLogin && (
+              <Grid item xs={6}>
+                <Typography
+                  variant='body2'
+                  component={Link}
+                  to='/auth/forgotpassword'
+                  color='primary'
+                >
+                  Forgot password?
+                </Typography>
+              </Grid>
+            )}
             <Grid item>
               <Typography
                 variant='body2'

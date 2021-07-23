@@ -3,8 +3,10 @@ import {
   FINISH_LOGIN,
   LOGIN,
   LOGOUT,
+  FORGOT_PASSWORD,
   SIGN_UP,
-  START_LOGIN
+  START_LOGIN,
+  RESET_PASSWORD
 } from '../actions/constant';
 import { ReturnUser, UserActionType } from '../types/actionType';
 
@@ -17,6 +19,7 @@ type InitialState = {
   error: string;
   user: UserType | null;
   loading: boolean;
+  resetMessage?: string;
 };
 
 const initialState = {
@@ -38,6 +41,20 @@ const authReducer = (
       return { ...state, user: action.payload };
     case LOGIN:
       return { ...state, user: action.payload };
+    case FORGOT_PASSWORD:
+      return {
+        user: null,
+        error: '',
+        loading: false,
+        resetMessage: action.payload
+      };
+    case RESET_PASSWORD:
+      return {
+        user: null,
+        error: '',
+        loading: false,
+        resetMessage: action.payload
+      };
     case FETCH_ERROR:
       return { ...state, error: action.payload };
     case LOGOUT:

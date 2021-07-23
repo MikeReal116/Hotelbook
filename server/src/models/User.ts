@@ -9,6 +9,7 @@ export type UserDocument = Document & {
   email: string;
   password: string;
   role: 'user' | 'admin';
+  resetPasswordToken?: string;
 };
 
 const userSchema = new mongooose.Schema<UserDocument>({
@@ -37,6 +38,9 @@ const userSchema = new mongooose.Schema<UserDocument>({
     type: String,
     enum: ['admin', 'user'],
     default: 'user'
+  },
+  resetPasswordToken: {
+    type: String
   }
 });
 

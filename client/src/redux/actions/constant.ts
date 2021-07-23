@@ -8,3 +8,5 @@ export const LOGIN = 'LOGIN';
 export const START_LOGIN = 'START_LOGIN';
 export const FINISH_LOGIN = 'FINISH_LOGIN';
 export const LOGOUT = 'LOGOUT';
+export const FORGOT_PASSWORD = 'FORGOT_PASSWORD';
+export const RESET_PASSWORD = 'RESET_PASSWORD';
