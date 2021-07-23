@@ -1,6 +1,8 @@
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 import Header from './Header';
 import Footer from './Footer';
@@ -33,7 +35,10 @@ const Layout = ({ children }: LayoutProps) => {
         <Grid item xs={12}>
           <Header />
         </Grid>
-        <Box className={classes.main}>{children}</Box>
+        <Box className={classes.main}>
+          {children}
+          <ToastContainer position='bottom-right' />
+        </Box>
         <Grid item xs={12} className={classes.footer}>
           <Footer />
         </Grid>
