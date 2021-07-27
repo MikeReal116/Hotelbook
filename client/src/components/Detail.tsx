@@ -1,4 +1,5 @@
-import { useSelector } from 'react-redux';
+import { useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles, Theme } from '@material-ui/core/styles';
@@ -8,10 +9,13 @@ import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import { Carousel } from 'react-responsive-carousel';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Rating from '@material-ui/lab/Rating';
+import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import moment from 'moment';
 
 import { RootStore } from '../redux/reducers';
+import DatePicker from './DatePicker';
+import { bookRoom } from '../redux/actions';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -27,16 +31,50 @@ const useStyles = makeStyles((theme: Theme) => ({
   card: {
     padding: theme.spacing(2),
     height: '100%'
+  },
+  btn: {
+    marginTop: theme.spacing(2),
+    width: '77%'
   }
 }));
 
 const Detail = () => {
   const classes = useStyles();
-
+  const [startDate, setStartDate] = useState<null | Date>(null);
+  const [endDate, setEndDate] = useState<null | Date>(null);
+  const dispatch = useDispatch();
   const { room, loading, error } = useSelector(
     (state: RootStore) => state.rooms
   );
+  const { user } = useSelector((state: RootStore) => state.user);
 
+  const handleDateChange = (dates: Date | [Date, Date] | null) => {
+    const [start, end] = dates as [Date, Date];
+    setStartDate(start);
+    setEndDate(end);
+  };
+
+  const handleButtonBookClick = () => {
+    if (startDate && endDate) {
+      const start = +new Date(startDate);
+      const end = +new Date(endDate);
+      const diffTime = Math.abs(end - start);
+      const diffDays = Math.ceil(diffTime / (24 * 60 * 60 * 1000));
+      const amount = room ? room.price * diffDays : 0;
+      const roomId = room ? room._id : '';
+      const userId = user ? user.user._id : '';
+
+      const booking = {
+        roomId,
+        userId,
+        startDate: startDate.toISOString(),
+        endDate: endDate.toISOString(),
+        numberOfDays: diffDays,
+        amount
+      };
+      dispatch(bookRoom(booking));
+    }
+  };
   if (loading && !room && !error) {
     return <CircularProgress />;
   }
@@ -67,8 +105,26 @@ const Detail = () => {
               ))}
             </Carousel>
           </Grid>
-          <Grid item xs={12} md={6}>
-            <Typography variant='body2'>{room.description}</Typography>
+          <Grid container justifyContent='space-between'>
+            <Grid item xs={12} md={6}>
+              <Typography variant='body2'>{room.description}</Typography>
+            </Grid>
+
+            <Grid item xs={12} md={3}>
+              <DatePicker
+                handleDateChange={handleDateChange}
+                startDate={startDate}
+                endDate={endDate}
+              />
+              <Button
+                variant='contained'
+                color='primary'
+                className={classes.btn}
+                onClick={handleButtonBookClick}
+              >
+                Book
+              </Button>
+            </Grid>
           </Grid>
           <Grid item xs={12}>
             <Typography variant='subtitle2' paragraph>

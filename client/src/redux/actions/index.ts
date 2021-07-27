@@ -13,11 +13,18 @@ import {
   FINISH_LOGIN,
   LOGOUT,
   FORGOT_PASSWORD,
-  RESET_PASSWORD
+  RESET_PASSWORD,
+  BOOK_ROOM,
+  BOOK_ROOM_ERROR
 } from './constant';
-import { RoomActionType, UserActionType } from '../types/actionType';
+import {
+  RoomActionType,
+  UserActionType,
+  BookingActionType
+} from '../types/actionType';
 import axios from '../../axios/axios';
 import { UserType } from '../types/userTypes';
+import { BookingType } from '../types/bookingType';
 
 export const startLoading = (): RoomActionType => {
   return { type: START_LOADING };
@@ -117,6 +124,16 @@ export const resetPassword =
       dispatch({ type: RESET_PASSWORD, payload: data.message });
     } catch (error) {
       dispatch(fetchError(error.response.data.message) as UserActionType);
+    }
+  };
+
+export const bookRoom =
+  (booking: BookingType) => async (dispatch: Dispatch<BookingActionType>) => {
+    try {
+      await axios.post(`/api/v1/rooms/${booking.roomId}/booking`, booking);
+      dispatch({ type: BOOK_ROOM });
+    } catch (error) {
+      dispatch({ type: BOOK_ROOM_ERROR, payload: error.response.data.message });
     }
   };
 

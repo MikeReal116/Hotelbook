@@ -10,7 +10,9 @@ import {
   FINISH_LOGIN,
   LOGOUT,
   FORGOT_PASSWORD,
-  RESET_PASSWORD
+  RESET_PASSWORD,
+  BOOK_ROOM,
+  BOOK_ROOM_ERROR
 } from '../actions/constant';
 import { AllRoomType, RoomType } from './roomType';
 
@@ -38,6 +40,7 @@ type GetRoom = {
 };
 
 export type ReturnUser = {
+  _id: string;
   firstName: string;
   lastName: string;
   email: string;
@@ -80,6 +83,16 @@ type ResetPassword = {
 type Logout = {
   type: typeof LOGOUT;
 };
+
+type createBooking = {
+  type: typeof BOOK_ROOM;
+};
+
+type BookingError = {
+  type: typeof BOOK_ROOM_ERROR;
+  payload: string;
+};
+
 export type RoomActionType =
   | GetAllRooms
   | FetchError
@@ -96,3 +109,5 @@ export type UserActionType =
   | FinishLogin
   | ForgotPassword
   | ResetPassword;
+
+export type BookingActionType = createBooking | BookingError;

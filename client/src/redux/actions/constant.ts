@@ -10,3 +10,5 @@ export const FINISH_LOGIN = 'FINISH_LOGIN';
 export const LOGOUT = 'LOGOUT';
 export const FORGOT_PASSWORD = 'FORGOT_PASSWORD';
 export const RESET_PASSWORD = 'RESET_PASSWORD';
+export const BOOK_ROOM = 'BOOK_ROOM';
+export const BOOK_ROOM_ERROR = 'BOOK_ROOM_ERROR';

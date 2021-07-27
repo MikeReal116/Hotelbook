@@ -3,7 +3,6 @@ import jwt from 'jsonwebtoken';
 import { BadRequestError } from '../utils/appError';
 import User, { UserDocument } from '../models/User';
 import sendMessage from '../utils/sendMail';
-import { compareSync } from 'bcryptjs';
 
 const signup = async (user: UserDocument) => {
   const existingUser = await User.findOne({ email: user.email });
