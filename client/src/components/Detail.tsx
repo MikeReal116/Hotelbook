@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
@@ -15,7 +15,7 @@ import moment from 'moment';
 
 import { RootStore } from '../redux/reducers';
 import DatePicker from './DatePicker';
-import { bookRoom } from '../redux/actions';
+import { bookRoom, getAvailable, getBooked } from '../redux/actions';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -47,11 +47,30 @@ const Detail = () => {
     (state: RootStore) => state.rooms
   );
   const { user } = useSelector((state: RootStore) => state.user);
+  const { isAvailable } = useSelector((state: RootStore) => state.booking);
+
+  const roomId = room && room._id;
+
+  useEffect(() => {
+    if (roomId) {
+      dispatch(getBooked(roomId));
+    }
+  }, [dispatch, roomId]);
 
   const handleDateChange = (dates: Date | [Date, Date] | null) => {
     const [start, end] = dates as [Date, Date];
     setStartDate(start);
     setEndDate(end);
+    if (start && end) {
+      const id = room ? room._id : '';
+      dispatch(
+        getAvailable(
+          id,
+          new Date(start).toISOString(),
+          new Date(end).toISOString()
+        )
+      );
+    }
   };
 
   const handleButtonBookClick = () => {
@@ -116,14 +135,17 @@ const Detail = () => {
                 startDate={startDate}
                 endDate={endDate}
               />
-              <Button
-                variant='contained'
-                color='primary'
-                className={classes.btn}
-                onClick={handleButtonBookClick}
-              >
-                Book
-              </Button>
+              {!user && <Typography>Login to book</Typography>}
+              {isAvailable && user && (
+                <Button
+                  variant='contained'
+                  color='primary'
+                  className={classes.btn}
+                  onClick={handleButtonBookClick}
+                >
+                  Book
+                </Button>
+              )}
             </Grid>
           </Grid>
           <Grid item xs={12}>

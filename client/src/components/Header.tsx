@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useHistory } from 'react-router-dom';
 import AppBar from '@material-ui/core/AppBar';
@@ -6,6 +7,8 @@ import Toolbar from '@material-ui/core/Toolbar';
 import { Avatar } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
 import HotelIcon from '@material-ui/icons/Hotel';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
 import { makeStyles } from '@material-ui/core/styles';
 
 import { RootStore } from '../redux/reducers';
@@ -34,6 +37,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Header = () => {
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const { user } = useSelector((state: RootStore) => state.user);
   const classes = useStyles();
   const dispatch = useDispatch();
@@ -43,6 +47,15 @@ const Header = () => {
     if (user) {
       dispatch(logout(history));
     }
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+    history.push('/me');
+  };
+
+  const handleAvatarClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    setAnchorEl(event.currentTarget);
   };
 
   return (
@@ -68,7 +81,18 @@ const Header = () => {
         )}
         {user && (
           <span className={classes.avatar}>
-            <Avatar>{user.user.firstName.charAt(0)}</Avatar>
+            <Avatar onClick={handleAvatarClick}>
+              {user.user.firstName.charAt(0)}
+            </Avatar>
+            <Menu
+              id='simple-menu'
+              anchorEl={anchorEl}
+              keepMounted
+              open={Boolean(anchorEl)}
+              onClose={handleClose}
+            >
+              <MenuItem onClick={handleClose}>My bookings</MenuItem>
+            </Menu>
           </span>
         )}
         <Button

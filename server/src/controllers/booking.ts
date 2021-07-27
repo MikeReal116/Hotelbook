@@ -41,3 +41,35 @@ export const getBooking = async (
     next(new InternalServerError('Internal server error'));
   }
 };
+
+export const getFree = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { id } = req.params;
+  const { startDate, endDate } = req.body;
+  try {
+    const available = await BookingServices.getFree(id, startDate, endDate);
+    res.json({
+      available: available
+    });
+  } catch (error) {
+    next(new InternalServerError('Internal server error'));
+  }
+};
+
+export const getBooked = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { id } = req.params;
+  try {
+    const bookings = await BookingServices.getBooked(id);
+
+    res.json(bookings);
+  } catch (error) {
+    next(new InternalServerError('Internal server error'));
+  }
+};

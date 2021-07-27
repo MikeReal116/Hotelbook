@@ -12,8 +12,14 @@ import {
   FORGOT_PASSWORD,
   RESET_PASSWORD,
   BOOK_ROOM,
-  BOOK_ROOM_ERROR
+  BOOK_ROOM_ERROR,
+  START_LOADING_BOOK,
+  FINISH_LOADING_BOOK,
+  GET_ALL_BOOKING,
+  GET_AVAILABLE,
+  GET_BOOKED
 } from '../actions/constant';
+import { BookingReturn } from './bookingType';
 import { AllRoomType, RoomType } from './roomType';
 
 type GetAllRooms = {
@@ -84,13 +90,36 @@ type Logout = {
   type: typeof LOGOUT;
 };
 
-type createBooking = {
+type CreateBooking = {
   type: typeof BOOK_ROOM;
 };
 
 type BookingError = {
   type: typeof BOOK_ROOM_ERROR;
   payload: string;
+};
+
+type StartBooking = {
+  type: typeof START_LOADING_BOOK;
+};
+
+type FinishBooking = {
+  type: typeof FINISH_LOADING_BOOK;
+};
+
+type GetBooking = {
+  type: typeof GET_ALL_BOOKING;
+  payload: BookingReturn[];
+};
+
+type GetAvailable = {
+  type: typeof GET_AVAILABLE;
+  payload: boolean;
+};
+
+type GetBooked = {
+  type: typeof GET_BOOKED;
+  payload: string[];
 };
 
 export type RoomActionType =
@@ -110,4 +139,11 @@ export type UserActionType =
   | ForgotPassword
   | ResetPassword;
 
-export type BookingActionType = createBooking | BookingError;
+export type BookingActionType =
+  | CreateBooking
+  | BookingError
+  | StartBooking
+  | FinishBooking
+  | GetAvailable
+  | GetBooking
+  | GetBooked;

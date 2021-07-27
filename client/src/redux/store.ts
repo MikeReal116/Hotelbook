@@ -40,7 +40,8 @@ const initialState: RootStore = {
   },
   booking: {
     error: '',
-    booking: []
+    booking: [],
+    loading: false
   }
 };
 
