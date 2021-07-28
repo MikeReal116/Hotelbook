@@ -37,6 +37,11 @@ const initialState: RootStore = {
     loading: false,
     error: '',
     user: loadFromLocal()
+  },
+  booking: {
+    error: '',
+    booking: [],
+    loading: false
   }
 };
 

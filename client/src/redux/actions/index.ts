@@ -13,11 +13,23 @@ import {
   FINISH_LOGIN,
   LOGOUT,
   FORGOT_PASSWORD,
-  RESET_PASSWORD
+  RESET_PASSWORD,
+  BOOK_ROOM,
+  BOOK_ROOM_ERROR,
+  START_LOADING_BOOK,
+  FINISH_LOADING_BOOK,
+  GET_ALL_BOOKING,
+  GET_AVAILABLE,
+  GET_BOOKED
 } from './constant';
-import { RoomActionType, UserActionType } from '../types/actionType';
+import {
+  RoomActionType,
+  UserActionType,
+  BookingActionType
+} from '../types/actionType';
 import axios from '../../axios/axios';
 import { UserType } from '../types/userTypes';
+import { BookingType } from '../types/bookingType';
 
 export const startLoading = (): RoomActionType => {
   return { type: START_LOADING };
@@ -117,6 +129,54 @@ export const resetPassword =
       dispatch({ type: RESET_PASSWORD, payload: data.message });
     } catch (error) {
       dispatch(fetchError(error.response.data.message) as UserActionType);
+    }
+  };
+
+export const bookRoom =
+  (booking: BookingType) => async (dispatch: Dispatch<BookingActionType>) => {
+    dispatch({ type: START_LOADING_BOOK });
+    try {
+      await axios.post(`/api/v1/rooms/${booking.roomId}/booking`, booking);
+      dispatch({ type: BOOK_ROOM });
+      dispatch({ type: FINISH_LOADING_BOOK });
+    } catch (error) {
+      dispatch({ type: BOOK_ROOM_ERROR, payload: error.response.data.message });
+      dispatch({ type: FINISH_LOADING_BOOK });
+    }
+  };
+
+export const getBooking =
+  () => async (dispatch: Dispatch<BookingActionType>) => {
+    dispatch({ type: START_LOADING_BOOK });
+    try {
+      const { data } = await axios.get('/api/v1/bookings');
+      dispatch({ type: GET_ALL_BOOKING, payload: data });
+      dispatch({ type: FINISH_LOADING_BOOK });
+    } catch (error) {
+      dispatch({ type: BOOK_ROOM_ERROR, payload: error.response.data.message });
+      dispatch({ type: FINISH_LOADING_BOOK });
+    }
+  };
+
+export const getAvailable =
+  (id: string, startDate: string, endDate: string) =>
+  async (dispatch: Dispatch<BookingActionType>) => {
+    try {
+      const body = { startDate, endDate };
+      const { data } = await axios.post(`/api/v1/bookings/${id}/free`, body);
+      dispatch({ type: GET_AVAILABLE, payload: data.available });
+    } catch (error) {
+      dispatch({ type: BOOK_ROOM_ERROR, payload: error.response.data.message });
+    }
+  };
+
+export const getBooked =
+  (id: string) => async (dispatch: Dispatch<BookingActionType>) => {
+    try {
+      const { data } = await axios.get(`/api/v1/bookings/${id}/booked`);
+      dispatch({ type: GET_BOOKED, payload: data });
+    } catch (error) {
+      dispatch({ type: BOOK_ROOM_ERROR, payload: error.response.data.message });
     }
   };
 

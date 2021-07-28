@@ -1,18 +1,20 @@
 import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { useLocation } from 'react-router';
+import { useLocation, useHistory } from 'react-router';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import jwt_decode, { JwtPayload } from 'jwt-decode';
 
 import Pagination from './Pagination';
 import { RootStore } from '../redux/reducers';
 import Card from './Card';
 import { getAllRooms } from '../redux/actions';
 import Search from './Search';
+import { logout } from '../redux/actions';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -29,9 +31,12 @@ const useStyles = makeStyles((theme: Theme) => ({
 const Home = () => {
   const { rooms, loading, error, itemsPerPage, filteredRoomCount } =
     useSelector((state: RootStore) => state.rooms);
+  const { user } = useSelector((state: RootStore) => state.user);
   const dispatch = useDispatch();
   const classes = useStyles();
   const location = useLocation();
+  const history = useHistory();
+  const token = user?.token;
   const query = new URLSearchParams(location.search);
   const page = parseInt(query.get('page') || '1', 10);
   const hotelLocation = query.get('location');
@@ -45,6 +50,15 @@ const Home = () => {
       dispatch(getAllRooms(undefined, hotelLocation));
     }
   }, [hotelLocation, dispatch]);
+
+  useEffect(() => {
+    if (token) {
+      const decodedToken = jwt_decode<JwtPayload>(token);
+      if (decodedToken && decodedToken.exp! * 1000 < new Date().getTime()) {
+        dispatch(logout(history));
+      }
+    }
+  }, [dispatch, location, token, history]);
 
   if (loading && !rooms.length) {
     return <CircularProgress />;

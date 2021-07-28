@@ -2,6 +2,7 @@ import { useSelector } from 'react-redux';
 import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
 
 import AuthPage from '../pages/AuthPage';
+import BookingHistoryPage from '../pages/BookingHistoryPage';
 import ForgotPasswordPage from '../pages/ForgotPasswordPage';
 import HomePage from '../pages/HomePage';
 import ResetPasswordPage from '../pages/ResetPasswordPage';
@@ -28,6 +29,9 @@ function App() {
         </Route>
         <Route path='/auth/resetpassword/:id/:token' exact>
           <ResetPasswordPage />
+        </Route>
+        <Route path='/me' exact>
+          {user ? <BookingHistoryPage /> : () => <Redirect to='/rooms' />}
         </Route>
       </Switch>
     </BrowserRouter>
