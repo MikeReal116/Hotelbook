@@ -1,9 +1,15 @@
 import * as Moment from 'moment';
 import { extendMoment } from 'moment-range';
+import Stripe from 'stripe';
+
+import Room from '../models/Room';
+import Booking, { BookingDocument } from '../models/Booking';
+
+const stripe = new Stripe(process.env.STRIPE_SECRET as string, {
+  apiVersion: '2020-08-27'
+});
 
 const moment = extendMoment(Moment);
-
-import Booking, { BookingDocument } from '../models/Booking';
 
 const createBooking = async (booking: BookingDocument) => {
   return await booking.save();
@@ -52,4 +58,42 @@ const getBooked = async (id: string) => {
   }
   return bookedDays;
 };
-export default { createBooking, getBooking, getFree, getBooked };
+
+const stripeCheckout = async (
+  roomId: string,
+  userId: string,
+  startDate: string,
+  endDate: string,
+  numberOfDays: number,
+  amount: number,
+  email: string
+) => {
+  const room = await Room.findById(roomId);
+  const session = await stripe.checkout.sessions.create({
+    success_url: `${process.env.CLIENT_URL}/me`,
+    cancel_url: `${process.env.CLIENT_URL}/rooms/${roomId}`,
+    payment_method_types: ['card'],
+    mode: 'payment',
+    line_items: [
+      {
+        amount: amount * 100,
+        quantity: 1,
+        currency: 'usd',
+        name: room.name,
+        images: [room.images[0]]
+      }
+    ],
+    customer_email: email,
+    metadata: { startDate, endDate, numberOfDays }
+  });
+
+  return session;
+};
+
+export default {
+  createBooking,
+  getBooking,
+  getFree,
+  getBooked,
+  stripeCheckout
+};

@@ -1,5 +1,6 @@
 import express from 'express';
 import dotenv from 'dotenv';
+dotenv.config({ path: '.env' });
 import cors from 'cors';
 
 import roomRouter from './routers/room';
@@ -8,7 +9,6 @@ import userRouter from './routers/user';
 import bookingRouter from './routers/booking';
 import errorHanldler from './middlewares/error';
 
-dotenv.config({ path: '.env' });
 const app = express();
 
 app.use(cors());

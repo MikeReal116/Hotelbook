@@ -16,6 +16,7 @@ import moment from 'moment';
 import { RootStore } from '../redux/reducers';
 import DatePicker from './DatePicker';
 import { bookRoom, getAvailable, getBooked } from '../redux/actions';
+import makePayment from '../utils/stripe';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -73,7 +74,7 @@ const Detail = () => {
     }
   };
 
-  const handleButtonBookClick = () => {
+  const handleButtonCheckoutClick = () => {
     if (startDate && endDate) {
       const start = +new Date(startDate);
       const end = +new Date(endDate);
@@ -81,17 +82,23 @@ const Detail = () => {
       const diffDays = Math.ceil(diffTime / (24 * 60 * 60 * 1000));
       const amount = room ? room.price * diffDays : 0;
       const roomId = room ? room._id : '';
-      const userId = user ? user.user._id : '';
 
-      const booking = {
+      // const booking = {
+      //   roomId,
+      //   userId,
+      //   startDate: startDate.toISOString(),
+      //   endDate: endDate.toISOString(),
+      //   numberOfDays: diffDays,
+      //   amount
+      // };
+      // dispatch(bookRoom(booking));
+      makePayment(
         roomId,
-        userId,
-        startDate: startDate.toISOString(),
-        endDate: endDate.toISOString(),
-        numberOfDays: diffDays,
+        startDate.toISOString(),
+        endDate.toISOString(),
+        diffDays,
         amount
-      };
-      dispatch(bookRoom(booking));
+      );
     }
   };
   if (loading && !room && !error) {
@@ -141,9 +148,9 @@ const Detail = () => {
                   variant='contained'
                   color='primary'
                   className={classes.btn}
-                  onClick={handleButtonBookClick}
+                  onClick={handleButtonCheckoutClick}
                 >
-                  Book
+                  Checkout
                 </Button>
               )}
             </Grid>

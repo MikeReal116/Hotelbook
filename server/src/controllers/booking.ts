@@ -73,3 +73,29 @@ export const getBooked = async (
     next(new InternalServerError('Internal server error'));
   }
 };
+
+export const stripeCheckout = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { roomId } = req.params;
+  const { startDate, endDate, numberOfDays, amount } = req.body;
+  const userId = req.user._id;
+  const email = req.user.email;
+  try {
+    const session = await BookingServices.stripeCheckout(
+      roomId,
+      userId,
+      startDate,
+      endDate,
+      numberOfDays,
+      amount,
+      email
+    );
+    res.json(session);
+  } catch (error) {
+    next(new InternalServerError('Internal server error'));
+    console.log(error.message);
+  }
+};
