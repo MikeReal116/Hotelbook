@@ -3,12 +3,24 @@ import { extendMoment } from 'moment-range';
 import Stripe from 'stripe';
 
 import Room from '../models/Room';
+import User from '../models/User';
 import Booking, { BookingDocument } from '../models/Booking';
+import { BadRequestError } from '../utils/appError';
+
+type StripeEventData = Stripe.Event.Data.Object & {
+  amount_total: number;
+  client_reference_id: string;
+  customer_email: string;
+  metadata: {
+    startDate: string;
+    endDate: string;
+    numberOfDays: number;
+  };
+};
 
 const stripe = new Stripe(process.env.STRIPE_SECRET as string, {
   apiVersion: '2020-08-27'
 });
-
 const moment = extendMoment(Moment);
 
 const createBooking = async (booking: BookingDocument) => {
@@ -68,6 +80,8 @@ const stripeCheckout = async (
   amount: number,
   email: string
 ) => {
+  {
+  }
   const room = await Room.findById(roomId);
   const session = await stripe.checkout.sessions.create({
     success_url: `${process.env.CLIENT_URL}/me`,
@@ -78,16 +92,44 @@ const stripeCheckout = async (
       {
         amount: amount * 100,
         quantity: 1,
-        currency: 'usd',
+        currency: 'eur',
         name: room.name,
         images: [room.images[0]]
       }
     ],
+    client_reference_id: roomId,
     customer_email: email,
     metadata: { startDate, endDate, numberOfDays }
   });
-
   return session;
+};
+
+const listenCheckout = async (signature: string | string[], body) => {
+  try {
+    const event = stripe.webhooks.constructEvent(
+      body,
+      signature,
+      process.env.STRIPE_WEBHOOK_SECRET as string
+    );
+    if (event.type === 'checkout.session.completed') {
+      const sessionData = event.data.object as StripeEventData;
+      const amount = sessionData.amount_total / 100;
+      const userId = (await User.findOne({ email: sessionData.customer_email }))
+        .id;
+      const roomId = sessionData.client_reference_id;
+      const { startDate, endDate, numberOfDays } = sessionData.metadata;
+      return await Booking.create({
+        roomId,
+        userId,
+        startDate,
+        endDate,
+        numberOfDays,
+        amount
+      });
+    }
+  } catch (error) {
+    throw new BadRequestError(error.message);
+  }
 };
 
 export default {
@@ -95,5 +137,6 @@ export default {
   getBooking,
   getFree,
   getBooked,
-  stripeCheckout
+  stripeCheckout,
+  listenCheckout
 };

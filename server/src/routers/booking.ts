@@ -13,6 +13,7 @@ const router = express.Router({ mergeParams: true });
 
 router.post('/', auth, createBooking);
 router.post('/:roomId/checkout', auth, stripeCheckout);
+
 router.get('/', auth, getBooking);
 router.post('/:id/free', getFree);
 router.get('/:id/booked', getBooked);
