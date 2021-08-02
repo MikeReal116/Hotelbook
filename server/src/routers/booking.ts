@@ -16,5 +16,6 @@ router.post('/:roomId/checkout', auth, stripeCheckout);
 
 router.get('/', auth, getBooking);
 router.post('/:id/free', getFree);
+
 router.get('/:id/booked', getBooked);
 export default router;

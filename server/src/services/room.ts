@@ -12,7 +12,7 @@ const getRoom = async (id: string) => {
   return await room
     .populate({
       path: 'review',
-      select: '-__v -updatedAt -reviewer'
+      select: '-__v -updatedAt'
     })
     .execPopulate();
 };

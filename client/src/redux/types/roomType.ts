@@ -1,8 +1,9 @@
-type ReviewType = {
+export type ReviewType = {
   _id: string;
   reviewerName: string;
   rating: number;
   review: string;
+  reviewer: string;
   createdAt: Date;
 };
 export type RoomType = {

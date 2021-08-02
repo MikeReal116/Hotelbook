@@ -2,7 +2,8 @@ import {
   FINISH_LOADING,
   GET_ALL_ROOMS,
   GET_ROOM,
-  START_LOADING
+  START_LOADING,
+  SUBMIT_REVIEW
 } from '../actions/constant';
 import { RoomActionType } from '../types/actionType';
 import { RoomType } from '../types/roomType';
@@ -48,6 +49,8 @@ const roomReducer = (
       };
     case GET_ROOM:
       return { ...state, room: action.payload };
+    case SUBMIT_REVIEW:
+      return { ...state };
     default:
       return state;
   }

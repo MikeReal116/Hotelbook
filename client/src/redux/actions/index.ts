@@ -20,7 +20,8 @@ import {
   FINISH_LOADING_BOOK,
   GET_ALL_BOOKING,
   GET_AVAILABLE,
-  GET_BOOKED
+  GET_BOOKED,
+  SUBMIT_REVIEW
 } from './constant';
 import {
   RoomActionType,
@@ -106,6 +107,11 @@ export const login =
     }
   };
 
+export const logout = (history: History) => {
+  history.push('/auth');
+  return { type: LOGOUT };
+};
+
 export const forgotPassword =
   (email: string) => async (dispatch: Dispatch<UserActionType>) => {
     try {
@@ -180,7 +186,13 @@ export const getBooked =
     }
   };
 
-export const logout = (history: History) => {
-  history.push('/auth');
-  return { type: LOGOUT };
-};
+export const submitReview =
+  (id: string, review: { rating: number; review: string }) =>
+  async (dispatch: Dispatch<RoomActionType>) => {
+    try {
+      await axios.post(`/api/v1/rooms/${id}/review`, review);
+      dispatch({ type: SUBMIT_REVIEW });
+    } catch (error) {
+      console.log(error);
+    }
+  };

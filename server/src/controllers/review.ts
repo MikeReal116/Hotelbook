@@ -23,13 +23,21 @@ export const postReview = async (
   next: NextFunction
 ) => {
   const { roomId } = req.params;
-  const review = new Review({ ...req.body, room: roomId });
+  const userId = req.user._id;
+  const reviewerName = req.user.firstName;
+
+  const review = new Review({
+    ...req.body,
+    room: roomId,
+    reviewer: userId,
+    reviewerName
+  });
   try {
     const newReview = await ReviewServices.postReview(review);
     res.json(newReview);
   } catch (error) {
     if (error.name === 'ValidationError')
       return next(new BadRequestError('Bad request'));
-    next(new InternalServerError('iInternal Server Error'));
+    next(new InternalServerError('You can not make a review for this room'));
   }
 };

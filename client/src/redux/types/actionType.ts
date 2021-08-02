@@ -17,7 +17,8 @@ import {
   FINISH_LOADING_BOOK,
   GET_ALL_BOOKING,
   GET_AVAILABLE,
-  GET_BOOKED
+  GET_BOOKED,
+  SUBMIT_REVIEW
 } from '../actions/constant';
 import { BookingReturn } from './bookingType';
 import { AllRoomType, RoomType } from './roomType';
@@ -122,12 +123,17 @@ type GetBooked = {
   payload: string[];
 };
 
+type SubmitReview = {
+  type: typeof SUBMIT_REVIEW;
+};
+
 export type RoomActionType =
   | GetAllRooms
   | FetchError
   | StartLoading
   | FinishLoading
-  | GetRoom;
+  | GetRoom
+  | SubmitReview;
 
 export type UserActionType =
   | Signup

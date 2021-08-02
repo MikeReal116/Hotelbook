@@ -68,6 +68,7 @@ const getBooked = async (id: string) => {
       bookedDays = bookedDays.concat(booked);
     });
   }
+
   return bookedDays;
 };
 
