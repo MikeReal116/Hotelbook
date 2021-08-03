@@ -18,7 +18,9 @@ import {
   GET_ALL_BOOKING,
   GET_AVAILABLE,
   GET_BOOKED,
-  SUBMIT_REVIEW
+  SUBMIT_REVIEW,
+  ADD_ROOM,
+  UPDATE_ROOM
 } from '../actions/constant';
 import { BookingReturn } from './bookingType';
 import { AllRoomType, RoomType } from './roomType';
@@ -43,6 +45,16 @@ type FinishLoading = {
 
 type GetRoom = {
   type: typeof GET_ROOM;
+  payload: RoomType;
+};
+
+type AddRoom = {
+  type: typeof ADD_ROOM;
+  payload: RoomType;
+};
+
+type UpdateRoom = {
+  type: typeof UPDATE_ROOM;
   payload: RoomType;
 };
 
@@ -125,6 +137,7 @@ type GetBooked = {
 
 type SubmitReview = {
   type: typeof SUBMIT_REVIEW;
+  payload: RoomType;
 };
 
 export type RoomActionType =
@@ -133,6 +146,8 @@ export type RoomActionType =
   | StartLoading
   | FinishLoading
   | GetRoom
+  | AddRoom
+  | UpdateRoom
   | SubmitReview;
 
 export type UserActionType =

@@ -1,5 +1,6 @@
 import Review, { ReviewDocument } from '../models/Review';
 import Booking from '../models/Booking';
+import Room from '../models/Room';
 import { BadRequestError } from '../utils/appError';
 
 const getAllReviews = async () => {
@@ -24,9 +25,16 @@ const postReview = async (review: ReviewDocument) => {
   if (existingReview) {
     existingReview.rating = review.rating;
     existingReview.review = review.review;
-    return await existingReview.save();
+    await existingReview.save();
+    return await Room.findById(existingReview.room).populate({
+      path: 'review',
+      select: '-__v -updatedAt'
+    });
   }
-  return await review.save();
+  return await Room.findById(review.room).populate({
+    path: 'review',
+    select: '-__v -updatedAt'
+  });
 };
 
 export default { getAllReviews, postReview };

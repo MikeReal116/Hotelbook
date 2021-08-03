@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useHistory } from 'react-router-dom';
 import AppBar from '@material-ui/core/AppBar';
@@ -13,6 +13,7 @@ import { makeStyles } from '@material-ui/core/styles';
 
 import { RootStore } from '../redux/reducers';
 import { logout } from '../redux/actions';
+import formContext from '../context/formContext';
 
 const useStyles = makeStyles((theme) => ({
   toolbar: {
@@ -38,6 +39,7 @@ const useStyles = makeStyles((theme) => ({
 
 const Header = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const { changeFormId } = useContext(formContext);
   const { user } = useSelector((state: RootStore) => state.user);
   const classes = useStyles();
   const dispatch = useDispatch();
@@ -49,13 +51,23 @@ const Header = () => {
     }
   };
 
+  const handleClickBooking = () => {
+    history.push('/me');
+    setAnchorEl(null);
+  };
+
   const handleClose = () => {
     setAnchorEl(null);
-    history.push('/me');
   };
 
   const handleAvatarClick = (event: React.MouseEvent<HTMLDivElement>) => {
     setAnchorEl(event.currentTarget);
+  };
+
+  const handleClickAddroom = () => {
+    changeFormId();
+    history.push('/rooms/add');
+    setAnchorEl(null);
   };
 
   return (
@@ -91,7 +103,10 @@ const Header = () => {
               open={Boolean(anchorEl)}
               onClose={handleClose}
             >
-              <MenuItem onClick={handleClose}>My bookings</MenuItem>
+              <MenuItem onClick={handleClickBooking}>My bookings</MenuItem>
+              {user && user.user.role === 'admin' && (
+                <MenuItem onClick={handleClickAddroom}>Add Room</MenuItem>
+              )}
             </Menu>
           </span>
         )}

@@ -21,7 +21,9 @@ import {
   GET_ALL_BOOKING,
   GET_AVAILABLE,
   GET_BOOKED,
-  SUBMIT_REVIEW
+  SUBMIT_REVIEW,
+  ADD_ROOM,
+  UPDATE_ROOM
 } from './constant';
 import {
   RoomActionType,
@@ -31,6 +33,7 @@ import {
 import axios from '../../axios/axios';
 import { UserType } from '../types/userTypes';
 import { BookingType } from '../types/bookingType';
+import { RoomForm } from '../types/roomType';
 
 export const startLoading = (): RoomActionType => {
   return { type: START_LOADING };
@@ -71,6 +74,30 @@ export const getRoom =
     } catch (error) {
       dispatch(fetchError(error.response.data.message));
       dispatch(finishLoading());
+    }
+  };
+
+export const addRoom =
+  (room: RoomForm, history: History) =>
+  async (dispatch: Dispatch<RoomActionType>) => {
+    try {
+      const { data } = await axios.post('/api/v1/rooms', room);
+      dispatch({ type: ADD_ROOM, payload: data });
+      history.push('/rooms');
+    } catch (error) {
+      dispatch(fetchError(error.response.data.message));
+    }
+  };
+
+export const updateRoom =
+  (id: string, room: RoomForm, history: History) =>
+  async (dispatch: Dispatch<RoomActionType>) => {
+    try {
+      const { data } = await axios.put(`/api/v1/rooms/${id}`, room);
+      dispatch({ type: UPDATE_ROOM, payload: data });
+      history.push('/rooms');
+    } catch (error) {
+      dispatch(fetchError(error.response.data.message));
     }
   };
 
@@ -190,8 +217,8 @@ export const submitReview =
   (id: string, review: { rating: number; review: string }) =>
   async (dispatch: Dispatch<RoomActionType>) => {
     try {
-      await axios.post(`/api/v1/rooms/${id}/review`, review);
-      dispatch({ type: SUBMIT_REVIEW });
+      const { data } = await axios.post(`/api/v1/rooms/${id}/review`, review);
+      dispatch({ type: SUBMIT_REVIEW, payload: data });
     } catch (error) {
       console.log(error);
     }

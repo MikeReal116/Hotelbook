@@ -1,9 +1,11 @@
 import {
+  ADD_ROOM,
   FINISH_LOADING,
   GET_ALL_ROOMS,
   GET_ROOM,
   START_LOADING,
-  SUBMIT_REVIEW
+  SUBMIT_REVIEW,
+  UPDATE_ROOM
 } from '../actions/constant';
 import { RoomActionType } from '../types/actionType';
 import { RoomType } from '../types/roomType';
@@ -49,8 +51,17 @@ const roomReducer = (
       };
     case GET_ROOM:
       return { ...state, room: action.payload };
+    case ADD_ROOM:
+      return { ...state, rooms: [...state.rooms, action.payload] };
+    case UPDATE_ROOM:
+      return {
+        ...state,
+        rooms: state.rooms.map((room) =>
+          room._id === action.payload._id ? action.payload : room
+        )
+      };
     case SUBMIT_REVIEW:
-      return { ...state };
+      return { ...state, room: action.payload };
     default:
       return state;
   }

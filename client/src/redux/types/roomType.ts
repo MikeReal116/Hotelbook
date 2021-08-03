@@ -23,6 +23,20 @@ export type RoomType = {
   review?: ReviewType[];
 };
 
+export type RoomForm = {
+  name: string;
+  address: string;
+  price: number;
+  description: string;
+  rating?: number;
+  numberOfRating?: number;
+  WiFi?: boolean;
+  breakfast?: boolean;
+  numberOfBeds?: number;
+  images: string;
+  guestCapacity?: number;
+};
+
 export type AllRoomType = {
   roomCount?: number;
   itemsPerPage?: number;

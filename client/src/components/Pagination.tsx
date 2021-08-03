@@ -13,7 +13,7 @@ const PaginationComp = ({
   filteredRoomCount,
   itemsPerPage
 }: PropType) => {
-  const numOfPages = Math.round(filteredRoomCount / itemsPerPage);
+  const numOfPages = Math.ceil(filteredRoomCount / itemsPerPage);
 
   return (
     <Pagination

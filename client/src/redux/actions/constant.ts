@@ -18,3 +18,5 @@ export const GET_ALL_BOOKING = 'GET_ALL_BOOKING';
 export const GET_AVAILABLE = 'GET_AVAILABLE';
 export const GET_BOOKED = 'GET_BOOKED';
 export const SUBMIT_REVIEW = 'SUBMIT_REVIEW';
+export const ADD_ROOM = 'ADD_ROOM';
+export const UPDATE_ROOM = 'UPDATE_ROOM';
