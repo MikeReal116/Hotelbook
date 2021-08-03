@@ -5,12 +5,13 @@ import AuthPage from '../pages/AuthPage';
 import BookingHistoryPage from '../pages/BookingHistoryPage';
 import ForgotPasswordPage from '../pages/ForgotPasswordPage';
 import HomePage from '../pages/HomePage';
+import NewRoomPage from '../pages/NewRoomPage';
 import ResetPasswordPage from '../pages/ResetPasswordPage';
 import RoomDetailPage from '../pages/RoomDetailPage';
 import { RootStore } from '../redux/reducers';
 
 function App() {
-  const user = useSelector((state: RootStore) => state.user);
+  const { user } = useSelector((state: RootStore) => state.user);
   return (
     <BrowserRouter>
       <Switch>
@@ -19,7 +20,14 @@ function App() {
           <HomePage />
         </Route>
         <Route path='/auth' exact>
-          {user ? <AuthPage /> : () => <Redirect to='/rooms' />}
+          {!user ? <AuthPage /> : () => <Redirect to='/rooms' />}
+        </Route>
+        <Route path='/rooms/add' exact>
+          {user && user.user.role === 'admin' ? (
+            <NewRoomPage />
+          ) : (
+            () => <Redirect to='/rooms' />
+          )}
         </Route>
         <Route path='/rooms/:id' exact>
           <RoomDetailPage />

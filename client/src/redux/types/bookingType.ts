@@ -10,7 +10,7 @@ export type BookingType = {
 
 export type BookingReturn = {
   _id: string;
-  roomId: [{ images: string[]; name: string }];
+  roomId: { images: string[]; name: string; _id: string };
   userId: string;
   startDate: string;
   endDate: string;

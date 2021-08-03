@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
-import { InternalServerError } from '../utils/appError';
 
+import { BadRequestError, InternalServerError } from '../utils/appError';
 import Booking from '../models/Booking';
 import BookingServices from '../services/booking';
 
@@ -96,6 +96,25 @@ export const stripeCheckout = async (
     res.json(session);
   } catch (error) {
     next(new InternalServerError('Internal server error'));
-    console.log(error.message);
+    console.log(error);
+  }
+};
+
+export const listenCheckout = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const signature = req.headers['stripe-signature'];
+
+  try {
+    const booking = await BookingServices.listenCheckout(
+      signature as string | string[],
+      req.body
+    );
+    res.json(booking);
+  } catch (error) {
+    next(new BadRequestError(error.message));
+    console.log(error);
   }
 };

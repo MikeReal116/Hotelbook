@@ -15,8 +15,9 @@ import moment from 'moment';
 
 import { RootStore } from '../redux/reducers';
 import DatePicker from './DatePicker';
-import { bookRoom, getAvailable, getBooked } from '../redux/actions';
+import { getAvailable, getBooked, getBooking } from '../redux/actions';
 import makePayment from '../utils/stripe';
+import Review from './Review';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -48,15 +49,24 @@ const Detail = () => {
     (state: RootStore) => state.rooms
   );
   const { user } = useSelector((state: RootStore) => state.user);
-  const { isAvailable } = useSelector((state: RootStore) => state.booking);
+  const { isAvailable, booking } = useSelector(
+    (state: RootStore) => state.booking
+  );
 
   const roomId = room && room._id;
+  const userEmail = user && user.user.email;
 
   useEffect(() => {
     if (roomId) {
       dispatch(getBooked(roomId));
     }
   }, [dispatch, roomId]);
+
+  useEffect(() => {
+    if (userEmail) {
+      dispatch(getBooking());
+    }
+  }, [dispatch, userEmail]);
 
   const handleDateChange = (dates: Date | [Date, Date] | null) => {
     const [start, end] = dates as [Date, Date];
@@ -83,15 +93,6 @@ const Detail = () => {
       const amount = room ? room.price * diffDays : 0;
       const roomId = room ? room._id : '';
 
-      // const booking = {
-      //   roomId,
-      //   userId,
-      //   startDate: startDate.toISOString(),
-      //   endDate: endDate.toISOString(),
-      //   numberOfDays: diffDays,
-      //   amount
-      // };
-      // dispatch(bookRoom(booking));
       makePayment(
         roomId,
         startDate.toISOString(),
@@ -101,6 +102,15 @@ const Detail = () => {
       );
     }
   };
+
+  const checkUser = () => {
+    if (booking.length && roomId && userEmail) {
+      const found = booking.find((book) => book.roomId._id === roomId);
+      return found ? true : false;
+    }
+    return false;
+  };
+
   if (loading && !room && !error) {
     return <CircularProgress />;
   }
@@ -181,6 +191,11 @@ const Detail = () => {
               Reviews
             </Typography>
             <Grid container spacing={4}>
+              <Grid item xs={12}>
+                {room.review && room.review.length !== 0 && checkUser() && (
+                  <Review id={room._id} />
+                )}
+              </Grid>
               {room.review?.length
                 ? room.review.map((review) => (
                     <Grid item xs={12} sm={6} md={4} key={review._id}>
