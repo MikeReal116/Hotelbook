@@ -20,6 +20,9 @@ app.use('/api/v1/rooms', roomRouter);
 app.use('/api/v1/reviews', reviewRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/bookings', bookingRouter);
+app.get('/', (req, res) => {
+  res.send('Server is running');
+});
 
 app.use(errorHanldler);
 

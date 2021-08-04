@@ -31,6 +31,7 @@ const postReview = async (review: ReviewDocument) => {
       select: '-__v -updatedAt'
     });
   }
+  await review.save();
   return await Room.findById(review.room).populate({
     path: 'review',
     select: '-__v -updatedAt'
