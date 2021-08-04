@@ -192,9 +192,7 @@ const Detail = () => {
             </Typography>
             <Grid container spacing={4}>
               <Grid item xs={12}>
-                {room.review && room.review.length !== 0 && checkUser() && (
-                  <Review id={room._id} />
-                )}
+                {checkUser() && <Review id={room._id} />}
               </Grid>
               {room.review?.length
                 ? room.review.map((review) => (
